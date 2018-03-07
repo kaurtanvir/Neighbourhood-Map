@@ -46,7 +46,50 @@ function initMap() {
             lat: 37.3688,
             lng: -122.0363
         },
-        zoom: 12
+        zoom: 12,
+        styles: [
+
+            {
+                "stylers": [{
+                    "saturation": -100
+                }]
+            }, {
+                "featureType": "water",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#0099dd"
+                }]
+            }, {
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "poi.park",
+                "elementType": "geometry.fill",
+                "stylers": [{
+                    "color": "#aadd55"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "on"
+                }]
+            }, {
+                "featureType": "road.arterial",
+                "elementType": "labels.text",
+                "stylers": [{
+                    "visibility": "on"
+                }]
+            }, {
+                "featureType": "road.local",
+                "elementType": "labels.text",
+                "stylers": [{
+                    "visibility": "on"
+                }]
+            }, {}
+        ]
     });
     infoWindow = new google.maps.InfoWindow();
 
@@ -96,7 +139,8 @@ var showInfoWindow = function(marker) {
             // add likes and ratings to marker
             marker.rating = data.response.venue.rating;
             marker.likes = data.response.venue.likes.count;
-            marker.hours = data.response.venue.hours;
+            marker.location = data.response.venue.location.address;
+            marker.popular = data.response.venue.popular.hours
             populateWindow(marker, infoWindow);
 
         },
@@ -111,7 +155,7 @@ var showInfoWindow = function(marker) {
 // populates infowindow with information about marker
 var populateWindow = function(marker, infowindow) {
 
-    infowindow.setContent('<div>' + marker.name +
+    infowindow.setContent('<div>' + marker.name + '<p>' + 'Location:' + marker.location +
         '<p>' + 'Likes: ' + marker.likes + '</div>' +
         '<p>' + 'Rating: ' + marker.rating.toString());
     infowindow.open(map, marker)
@@ -142,7 +186,6 @@ var viewModel = function() {
             return self.parkList();
         } else {
             return ko.utils.arrayFilter(self.parkList(), function(item) {
-                // set all markers visible (false)
                 var result = (item.name.toLowerCase().indexOf(filter) > -1)
                 item.marker.setVisible(result);
                 return result;
