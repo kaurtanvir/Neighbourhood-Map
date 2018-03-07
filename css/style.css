@@ -1,0 +1,15 @@
+html,body {
+height:100%;
+background-color:#000;
+margin:0;
+padding:0;
+}
+
+#map {
+height:515px;
+width:100%;
+}
+
+.header {
+color:#fff;
+}
