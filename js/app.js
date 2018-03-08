@@ -26,8 +26,8 @@ var parks = [{
         venueid: "4b8b172ff964a520699232e3"
     }
 
-];
-var destination = function(item) {
+        ];
+var destination = function (item) {
     this.name = item.name;
     this.lat = item.lat;
     this.lng = item.lng;
@@ -93,11 +93,11 @@ function initMap() {
     });
     infoWindow = new google.maps.InfoWindow();
 
-    for (i in parks) {
-        var lat = parks[i].lat;
-        var lng = parks[i].lng;
-        var name = parks[i].name;
-        var venueID = parks[i].venueid;
+    parks.forEach (function(loc) {
+        var lat = loc.lat;
+        var lng = loc.lng;
+        var name = loc.name;
+        var venueID = loc.venueid;
         var marker = new google.maps.Marker({
             map: map,
             position: {
@@ -108,7 +108,7 @@ function initMap() {
             animation: google.maps.Animation.DROP,
             id: venueID
         });
-        parks[i].marker = marker;
+        loc.marker=marker;
 
         marker.addListener('click', function() {
             animateMarker(this, marker);
@@ -116,7 +116,9 @@ function initMap() {
 
 
         });
-    }
+    });
+
+    
     // Activate knockout
     ko.applyBindings(new viewModel());
 }
@@ -127,7 +129,7 @@ var animateMarker = function(marker) {
         marker.setAnimation(null);
 
     }, 1000);
-}
+};
 
 
 //ajax request for Foursquare API
@@ -140,7 +142,7 @@ var showInfoWindow = function(marker) {
             marker.rating = data.response.venue.rating;
             marker.likes = data.response.venue.likes.count;
             marker.location = data.response.venue.location.address;
-            marker.popular = data.response.venue.popular.hours
+            marker.popular = data.response.venue.popular.hours;
             populateWindow(marker, infoWindow);
 
         },
@@ -150,7 +152,7 @@ var showInfoWindow = function(marker) {
         }
     });
 
-}
+};
 
 // populates infowindow with information about marker
 var populateWindow = function(marker, infowindow) {
@@ -158,7 +160,7 @@ var populateWindow = function(marker, infowindow) {
     infowindow.setContent('<div>' + marker.name + '<p>' + 'Location:' + marker.location +
         '<p>' + 'Likes: ' + marker.likes + '</div>' +
         '<p>' + 'Rating: ' + marker.rating.toString());
-    infowindow.open(map, marker)
+    infowindow.open(map, marker);
 
 };
 //View Model
@@ -180,7 +182,7 @@ var viewModel = function() {
             return self.parkList();
         } else {
             return ko.utils.arrayFilter(self.parkList(), function(item) {
-                var result = (item.name.toLowerCase().indexOf(filter) === 0)
+                var result = (item.name.toLowerCase().indexOf(filter) === 0);
                 item.marker.setVisible(result);
                 return result;
             });
@@ -189,11 +191,11 @@ var viewModel = function() {
 
     this.showMarker = function(location) {
         google.maps.event.trigger(location.marker, 'click');
-    }
+    };
 
     var errorMsg = function(error) {
 
         alert("Error in map");
-    }
-}
+    };
+};
 
