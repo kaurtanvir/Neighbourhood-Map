@@ -93,7 +93,7 @@ function initMap() {
     });
     infoWindow = new google.maps.InfoWindow();
 
-    for (var i = 0; i < parks.length; i++) {
+    for (i in parks) {
         var lat = parks[i].lat;
         var lng = parks[i].lng;
         var name = parks[i].name;
@@ -111,7 +111,7 @@ function initMap() {
         parks[i].marker = marker;
 
         marker.addListener('click', function() {
-            toggleBounce(this, marker);
+            animateMarker(this, marker);
             showInfoWindow(this, marker);
 
 
@@ -121,7 +121,7 @@ function initMap() {
     ko.applyBindings(new viewModel());
 }
 //Creates bounce animation on marker when location is clicked
-var toggleBounce = function(marker) {
+var animateMarker = function(marker) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function() {
         marker.setAnimation(null);
@@ -170,31 +170,30 @@ var viewModel = function() {
         self.parkList.push(new destination(parkLocation));
     });
 
-    this.showMarker = function(location) {
-        google.maps.event.trigger(location.marker, 'click');
-    }
-
+    
     //Filter
     this.filter = ko.observable("");
 
     self.filteredLocations = ko.computed(function() {
         var filter = self.filter().toLowerCase();
         if (!filter) {
-            ko.utils.arrayForEach(self.parkList(), function(item) {
-                item.marker.setVisible(true);
-            });
             return self.parkList();
         } else {
             return ko.utils.arrayFilter(self.parkList(), function(item) {
-                var result = (item.name.toLowerCase().indexOf(filter) > -1)
+                var result = (item.name.toLowerCase().indexOf(filter) === 0)
                 item.marker.setVisible(result);
                 return result;
             });
         }
     });
+
+    this.showMarker = function(location) {
+        google.maps.event.trigger(location.marker, 'click');
+    }
+
     var errorMsg = function(error) {
 
         alert("Error in map");
     }
-
 }
+
