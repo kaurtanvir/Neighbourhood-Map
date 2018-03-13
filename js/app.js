@@ -26,8 +26,14 @@ var parks = [{
         venueid: "4b8b172ff964a520699232e3"
     }
 
-        ];
-var destination = function (item) {
+];
+
+var errorMsg = function(error) {
+
+    alert("Error in map");
+};
+
+var destination = function(item) {
     this.name = item.name;
     this.lat = item.lat;
     this.lng = item.lng;
@@ -93,7 +99,7 @@ function initMap() {
     });
     infoWindow = new google.maps.InfoWindow();
 
-    parks.forEach (function(loc) {
+    parks.forEach(function(loc) {
         var lat = loc.lat;
         var lng = loc.lng;
         var name = loc.name;
@@ -108,7 +114,7 @@ function initMap() {
             animation: google.maps.Animation.DROP,
             id: venueID
         });
-        loc.marker=marker;
+        loc.marker = marker;
 
         marker.addListener('click', function() {
             animateMarker(this, marker);
@@ -118,7 +124,7 @@ function initMap() {
         });
     });
 
-    
+
     // Activate knockout
     ko.applyBindings(new viewModel());
 }
@@ -172,7 +178,7 @@ var viewModel = function() {
         self.parkList.push(new destination(parkLocation));
     });
 
-    
+
     //Filter
     this.filter = ko.observable("");
 
@@ -193,9 +199,5 @@ var viewModel = function() {
         google.maps.event.trigger(location.marker, 'click');
     };
 
-    var errorMsg = function(error) {
 
-        alert("Error in map");
-    };
 };
-
